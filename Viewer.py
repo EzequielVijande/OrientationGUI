@@ -225,13 +225,25 @@ class Viewer(ttk.Frame):
     def create_buttons(self, parent):
         self.progress_bar = ttk.Button(parent,text="Progress")
         self.save_button = ttk.Button(parent, text="Save")
-        self.prev_button = ttk.Button(parent, text="Previous study")
-        self.next_button = ttk.Button(parent, text="Next study")
+        self.prev_button = ttk.Button(parent, text="Previous study", command=self.controller.prev_study)
+        self.next_button = ttk.Button(parent, text="Next study", command=self.controller.next_study)
         #Position buttons
         self.progress_bar.grid(row=0, column=0, sticky="nsew")
         self.save_button.grid(row=0, column=1,sticky="nsew")
         self.prev_button.grid(row=0, column=2, sticky="nsew")
         self.next_button.grid(row=0, column=3, sticky="nsew")
+
+    def disable_next_button(self):
+        self.next_button.config(state=tk.DISABLED)
+
+    def enable_next_button(self):
+        self.next_button.config(state=tk.NORMAL)
+
+    def disable_prev_button(self):
+        self.prev_button.config(state=tk.DISABLED)
+
+    def enable_prev_button(self):
+        self.prev_button.config(state=tk.NORMAL)
 
     def set_controller(self, controller):
         """
