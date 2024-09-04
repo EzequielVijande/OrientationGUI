@@ -97,17 +97,17 @@ class Model:
         return rotated_tensor
 
     def get_transaxial_img(self):
-        return self.img
+        return self.img.transpose((2,1,0))
     def get_saggital_img(self):
-        return self.img
+        return np.flip(self.img.transpose((0,2,1)), 1)
     def get_coronal_img(self):
-        return self.img
+        return np.flip(self.img.transpose((1,2,0)), 1)
     def get_short_axs_img(self):
-        return self.reoriented
+        return self.reoriented.transpose((2,1,0))
     def get_hla_img(self):
-        return self.reoriented
+        return np.flip(self.reoriented.transpose((1,2,0)), 1)
     def get_vla_img(self):
-        return self.reoriented
+        return self.reoriented.transpose((0,1,2))
 
 
 # dir_name = ".//dataset//"

@@ -24,20 +24,20 @@ class Viewer(ttk.Frame):
         self.images_frame.grid(row=1, column=0, sticky='nsew')
         self.buttons_frame.grid(row=2, column=0, sticky='nsew')
 
-    def create_widgets(self):
+    def create_widgets(self, n_slices):
         #Create color bar
-        self.create_scales(self.color_frame)
+        self.create_scales(self.color_frame, n_slices)
         #Create image figures
         self.create_images(self.images_frame)
         #Create buttons
         self.create_buttons(self.buttons_frame)
 
-    def create_scales(self, parent):
+    def create_scales(self, parent, n_slices):
         self.sat_percentage= tk.IntVar()
-        self.slice_n = tk.IntVar(value="32")
+        self.slice_n = tk.IntVar(value=str(n_slices//2))
         self.color_bar = tk.Scale(parent, label= "Saturation", orient='horizontal', to=99,
                                    variable=self.sat_percentage, command=self.controller.update_imgs)
-        self.slice_bar = tk.Scale(parent, label= "Slice n", orient='horizontal', to=64,
+        self.slice_bar = tk.Scale(parent, label= "Slice n", orient='horizontal', to=n_slices,
                                    variable=self.slice_n, command=self.controller.update_imgs)
         parent.rowconfigure(0, weight=1)
         parent.rowconfigure(1, weight=1)
