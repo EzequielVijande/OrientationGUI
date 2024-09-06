@@ -103,9 +103,9 @@ class Model:
     def get_coronal_img(self):
         return np.flip(self.img.transpose((1,2,0)), 1)
     def get_short_axs_img(self):
-        return self.reoriented.transpose((2,1,0))
+        return np.flip(self.reoriented.transpose((2,1,0)), 2)
     def get_hla_img(self):
-        return np.flip(self.reoriented.transpose((1,2,0)), 1)
+        return np.flip(self.reoriented.transpose((1,2,0)), (1,2))
     def get_vla_img(self):
         return self.reoriented.transpose((0,1,2))
 
