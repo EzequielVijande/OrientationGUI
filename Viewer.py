@@ -37,7 +37,7 @@ class Viewer(ttk.Frame):
         self.slice_n = tk.IntVar(value=str(n_slices//2))
         self.color_bar = tk.Scale(parent, label= "Saturation", orient='horizontal', to=99,
                                    variable=self.sat_percentage, command=self.controller.update_imgs)
-        self.slice_bar = tk.Scale(parent, label= "Slice n", orient='horizontal', to=n_slices,
+        self.slice_bar = tk.Scale(parent, label= "Slice n", orient='horizontal', to=n_slices-1,
                                    variable=self.slice_n, command=self.controller.update_imgs)
         parent.rowconfigure(0, weight=1)
         parent.rowconfigure(1, weight=1)
@@ -132,91 +132,73 @@ class Viewer(ttk.Frame):
         self.hla_img.grid(row=1, column=0, sticky='nsew')
         self.vla_img.grid(row=1, column=0, sticky='nsew')
 
-    def update_tax_img(self, img):
+    def update_tax_img(self, img, eps=1e-3):
         w = self.tax_img.winfo_reqwidth()
         h = self.tax_img.winfo_reqheight()
         #Saturation
         new_sat_p = float(self.sat_percentage.get())/100.0
         sat_img = img.clip(max=img.max()*(1.0-new_sat_p))
-        if sat_img.max()>0:
-            rgb_img= (plt.get_cmap('CMRmap')(sat_img/sat_img.max())*255).astype(np.uint8)
-        else:
-            rgb_img = 255*np.ones((w,h,4))
+        rgb_img= (plt.get_cmap('CMRmap')(sat_img/(sat_img.max()+eps))*255).astype(np.uint8)
         pil_img = Image.fromarray(rgb_img, mode="RGBA").resize((w,h), Image.BICUBIC)
         pil_img.save('ta_pic.png')
         self.tax_ph_image = tk.PhotoImage(file='./ta_pic.png', width=w, height=h)
         self.tax_img.create_image(0, 0, anchor=tk.NW, image=self.tax_ph_image)
 
-    def update_co_img(self, img):
+    def update_co_img(self, img, eps=1e-3):
         w = self.tax_img.winfo_reqwidth()
         h = self.tax_img.winfo_reqheight()
         #Saturation
         new_sat_p = float(self.sat_percentage.get())/100.0
         sat_img = img.clip(max=img.max()*(1.0-new_sat_p))
-        if sat_img.max()>0:
-            rgb_img= (plt.get_cmap('CMRmap')(sat_img/sat_img.max())*255).astype(np.uint8)
-        else:
-            rgb_img = 255*np.ones((w,h,4))
+        rgb_img= (plt.get_cmap('CMRmap')(sat_img/(sat_img.max()+eps))*255).astype(np.uint8)
         pil_img = Image.fromarray(rgb_img, mode="RGBA").resize((w,h), Image.BICUBIC)
         pil_img.save('co_pic.png')
         self.co_ph_image = tk.PhotoImage(file='./co_pic.png',width=w, height=h)
         self.co_img.create_image(0, 0, anchor=tk.NW, image=self.co_ph_image)
 
-    def update_sg_img(self, img):
+    def update_sg_img(self, img, eps=1e-3):
         w = self.tax_img.winfo_reqwidth()
         h = self.tax_img.winfo_reqheight()
         #Saturation
         new_sat_p = float(self.sat_percentage.get())/100.0
         sat_img = img.clip(max=img.max()*(1.0-new_sat_p))
-        if sat_img.max()>0:
-            rgb_img= (plt.get_cmap('CMRmap')(sat_img/sat_img.max())*255).astype(np.uint8)
-        else:
-            rgb_img = 255*np.ones((w,h,4))
+        rgb_img= (plt.get_cmap('CMRmap')(sat_img/(sat_img.max()+eps))*255).astype(np.uint8)
         pil_img = Image.fromarray(rgb_img, mode="RGBA").resize((w,h), Image.BICUBIC)
         pil_img.save('sg_pic.png')
         self.sg_ph_image = tk.PhotoImage(file='./sg_pic.png',width=w, height=h)
         self.sg_img.create_image(0, 0, anchor=tk.NW, image=self.sg_ph_image)
 
-    def update_shx_img(self, img):
+    def update_shx_img(self, img, eps=1e-3):
         w = self.tax_img.winfo_reqwidth()
         h = self.tax_img.winfo_reqheight()
         #Saturation
         new_sat_p = float(self.sat_percentage.get())/100.0
         sat_img = img.clip(max=img.max()*(1.0-new_sat_p))
-        if sat_img.max()>0:
-            rgb_img= (plt.get_cmap('CMRmap')(sat_img/sat_img.max())*255).astype(np.uint8)
-        else:
-            rgb_img = 255*np.ones((w,h,4))
+        rgb_img= (plt.get_cmap('CMRmap')(sat_img/(sat_img.max()+eps))*255).astype(np.uint8)
         pil_img = Image.fromarray(rgb_img, mode="RGBA").resize((w,h), Image.BICUBIC)
         pil_img.save('shx_pic.png')
         self.shx_ph_image = tk.PhotoImage(file='./shx_pic.png',width=w, height=h)
         self.shx_img.create_image(0, 0, anchor=tk.NW, image=self.shx_ph_image)
     
-    def update_hla_img(self, img):
+    def update_hla_img(self, img, eps=1e-3):
         w = self.tax_img.winfo_reqwidth()
         h = self.tax_img.winfo_reqheight()
         #Saturation
         new_sat_p = float(self.sat_percentage.get())/100.0
         sat_img = img.clip(max=img.max()*(1.0-new_sat_p))
-        if sat_img.max()>0:
-            rgb_img= (plt.get_cmap('CMRmap')(sat_img/sat_img.max())*255).astype(np.uint8)
-        else:
-            rgb_img = 255*np.ones((w,h,4))
+        rgb_img= (plt.get_cmap('CMRmap')(sat_img/(sat_img.max()+eps))*255).astype(np.uint8)
         pil_img = Image.fromarray(rgb_img, mode="RGBA").resize((w,h), Image.BICUBIC)
         pil_img.save('hla_pic.png')
         self.hla_ph_image = tk.PhotoImage(file='./hla_pic.png',width=w, height=h)
         self.hla_img.create_image(0, 0, anchor=tk.NW, image=self.hla_ph_image)
 
-    def update_vla_img(self, img):
+    def update_vla_img(self, img, eps=1e-3):
         w = self.tax_img.winfo_reqwidth()
         h = self.tax_img.winfo_reqheight()
         #Saturation
         new_sat_p = float(self.sat_percentage.get())/100.0
         sat_img = img.clip(max=img.max()*(1.0-new_sat_p))
-        if sat_img.max()>0:
-            rgb_img= (plt.get_cmap('CMRmap')(sat_img/sat_img.max())*255).astype(np.uint8)
-        else:
-            rgb_img = 255*np.ones((w,h,4))
+        rgb_img= (plt.get_cmap('CMRmap')(sat_img/(sat_img.max()+eps))*255).astype(np.uint8)
         pil_img = Image.fromarray(rgb_img, mode="RGBA").resize((w,h), Image.BICUBIC)
         pil_img.save('vla_pic.png')
         self.vla_ph_image = tk.PhotoImage(file='./vla_pic.png',width=w, height=h)

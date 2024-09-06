@@ -90,9 +90,9 @@ class Controller():
         hla_img = self.model.get_hla_img()[slice_idx]
         vla_img = self.model.get_vla_img()[slice_idx]
         #update viewer images
-        self.viewer.update_tax_img((255*(tax_img/tax_img.max())).astype(np.uint8))
-        self.viewer.update_sg_img((255*(sg_img/sg_img.max())).astype(np.uint8))
-        self.viewer.update_co_img((255*(co_img/co_img.max())).astype(np.uint8))
-        self.viewer.update_shx_img((255*(shx_img/shx_img.max())).astype(np.uint8))
-        self.viewer.update_hla_img((255*(hla_img/hla_img.max())).astype(np.uint8))
-        self.viewer.update_vla_img((255*(vla_img/vla_img.max())).astype(np.uint8))
+        self.viewer.update_tax_img(tax_img)
+        self.viewer.update_sg_img(sg_img)
+        self.viewer.update_co_img(co_img)
+        self.viewer.update_shx_img(shx_img)
+        self.viewer.update_hla_img(hla_img)
+        self.viewer.update_vla_img(vla_img)
