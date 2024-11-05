@@ -3,24 +3,25 @@ from Viewer import Viewer
 import numpy as np
 import os
 
-SCORES_FILE = "scores.txt"
 class Controller():
 
-    def __init__(self, model=None, viewer=None, dir_name = None):
+    def __init__(self, user_name, model=None, viewer=None, dir_name = None):
         self.model = model
         self.viewer = viewer
-
-        if os.path.isfile(SCORES_FILE) and (os.path.getsize(SCORES_FILE)>0):
-            with open(SCORES_FILE, "r") as f:
-                f_name = f.readline().split(',')[0]
+        self.user_name = user_name
+        score_fname = user_name+"_scores.txt"
+        if os.path.isfile(score_fname) and (os.path.getsize(score_fname)>0):
+            with open(score_fname, "r") as f:
+                f_name = f.readlines()[-1].split(',')[0]
             files = os.listdir(dir_name)
             files.sort()
             self.cur_file = files.index(f_name+'.nii.gz')
         else:
             # Creates a new file
-            with open(SCORES_FILE, 'w') as fp:
+            with open(score_fname, 'w') as fp:
                 pass
             self.cur_file = 0
+        self.score_fname = score_fname
 
 
     def load_study(self, index):
@@ -54,7 +55,7 @@ class Controller():
             score = self.viewer.score_val.get()
             self.viewer.reset_score()
             file_name = files[i].split('.')[0]
-            with open("scores.txt", "a") as f:
+            with open(self.score_fname, "a") as f:
                 f.write(f"{file_name}, {score}\n")
         else:
             self.viewer.disable_next_button()
