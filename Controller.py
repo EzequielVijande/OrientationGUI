@@ -3,13 +3,25 @@ from Viewer import Viewer
 import numpy as np
 import os
 
+SCORES_FILE = "scores.txt"
 class Controller():
 
     def __init__(self, model=None, viewer=None, dir_name = None):
         self.model = model
         self.viewer = viewer
-        if dir_name is not None:
-            self.set_dir(dir_name)
+
+        if os.path.isfile(SCORES_FILE) and (os.path.getsize(SCORES_FILE)>0):
+            with open(SCORES_FILE, "r") as f:
+                f_name = f.readline().split(',')[0]
+            files = os.listdir(dir_name)
+            files.sort()
+            self.cur_file = files.index(f_name+'.nii.gz')
+        else:
+            # Creates a new file
+            with open(SCORES_FILE, 'w') as fp:
+                pass
+            self.cur_file = 0
+
 
     def load_study(self, index):
         self.cur_file = index
@@ -38,6 +50,12 @@ class Controller():
         if i < len(files):
             self.load_study(i)
             self.viewer.enable_prev_button()
+            self.viewer.disable_next_button()
+            score = self.viewer.score_val.get()
+            self.viewer.reset_score()
+            file_name = files[i].split('.')[0]
+            with open("scores.txt", "a") as f:
+                f.write(f"{file_name}, {score}\n")
         else:
             self.viewer.disable_next_button()
 
@@ -64,13 +82,14 @@ class Controller():
         self.working_dir = dir_name
         files = os.listdir(dir_name)
         files.sort()
-        searching_nifty=True
-        i=0
-        while searching_nifty:
-            if files[i].endswith('.nii.gz'):
-                searching_nifty = False
-            else:
-                i += 1
+        i = self.cur_file
+        if i == 0:
+            searching_nifty=True
+            while searching_nifty:
+                if files[i].endswith('.nii.gz'):
+                    searching_nifty = False
+                else:
+                    i += 1
         self.load_study(i)
         self.viewer.disable_prev_button()
 
@@ -81,14 +100,16 @@ class Controller():
         self.viewer = viewer
 
     def update_imgs(self, new_val=None):
-        slice_idx = self.viewer.slice_n.get()
+        slice_idx_tx = self.viewer.slice_n_tx.get()
+        slice_idx_sg = self.viewer.slice_n_sg.get()
+        slice_idx_co = self.viewer.slice_n_co.get()
         #Get all images
-        tax_img = self.model.get_transaxial_img()[slice_idx]
-        sg_img = self.model.get_saggital_img()[slice_idx]
-        co_img = self.model.get_coronal_img()[slice_idx]
-        shx_img = self.model.get_short_axs_img()[slice_idx]
-        hla_img = self.model.get_hla_img()[slice_idx]
-        vla_img = self.model.get_vla_img()[slice_idx]
+        tax_img = self.model.get_transaxial_img()[slice_idx_tx]
+        sg_img = self.model.get_saggital_img()[slice_idx_sg]
+        co_img = self.model.get_coronal_img()[slice_idx_co]
+        shx_img = self.model.get_short_axs_img()[slice_idx_tx]
+        hla_img = self.model.get_hla_img()[slice_idx_co]
+        vla_img = self.model.get_vla_img()[slice_idx_sg]
         #update viewer images
         self.viewer.update_tax_img(tax_img)
         self.viewer.update_sg_img(sg_img)

@@ -5,14 +5,17 @@ from PIL import Image
 from matplotlib import pyplot as plt
 import numpy as np
 
+
+SCORES = ["Completely", "A lot","Somewhat", "Slightly", "Nothing"]
+
 class Viewer(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         rootHeight = parent.winfo_height()
         rootWidth = parent.winfo_width()
         # create main frames
-        self.color_frame = ttk.Frame(self, height=int(0.1*rootHeight), width=rootWidth)
-        self.images_frame = ttk.Frame(self, height=int(0.8*rootHeight), width=rootWidth)
+        self.color_frame = ttk.Frame(self, height=int(0.2*rootHeight), width=rootWidth)
+        self.images_frame = ttk.Frame(self, height=int(0.7*rootHeight), width=rootWidth)
         self.buttons_frame = ttk.Frame(self, height=int(0.1*rootHeight), width=rootWidth)
         #Extra space configration
         self.rowconfigure(0, weight=0)
@@ -34,16 +37,26 @@ class Viewer(ttk.Frame):
 
     def create_scales(self, parent, n_slices):
         self.sat_percentage= tk.IntVar()
-        self.slice_n = tk.IntVar(value=str(n_slices//2))
+        self.slice_n_tx = tk.IntVar(value=str(n_slices//2))
+        self.slice_n_sg = tk.IntVar(value=str(n_slices//2))
+        self.slice_n_co = tk.IntVar(value=str(n_slices//2))
         self.color_bar = tk.Scale(parent, label= "Saturation", orient='horizontal', to=99,
                                    variable=self.sat_percentage, command=self.controller.update_imgs)
-        self.slice_bar = tk.Scale(parent, label= "Slice n", orient='horizontal', to=n_slices-1,
-                                   variable=self.slice_n, command=self.controller.update_imgs)
+        self.slice_bar_tx = tk.Scale(parent, orient='horizontal', to=n_slices-1,
+                                   variable=self.slice_n_tx, command=self.controller.update_imgs)
+        self.slice_bar_sg = tk.Scale(parent, orient='horizontal', to=n_slices-1,
+                                   variable=self.slice_n_sg, command=self.controller.update_imgs)
+        self.slice_bar_co = tk.Scale(parent, orient='horizontal', to=n_slices-1,
+                                   variable=self.slice_n_co, command=self.controller.update_imgs)
         parent.rowconfigure(0, weight=1)
         parent.rowconfigure(1, weight=1)
+        parent.rowconfigure(2, weight=1)
+        parent.rowconfigure(3, weight=1)
         parent.columnconfigure(0, weight=1)
         self.color_bar.grid(row=0,column=0, sticky='nsew')
-        self.slice_bar.grid(row=1,column=0, sticky='nsew')
+        self.slice_bar_tx.grid(row=1,column=0, sticky='nsew')
+        self.slice_bar_co.grid(row=2,column=0, sticky='nsew')
+        self.slice_bar_sg.grid(row=3,column=0, sticky='nsew')
         
     def create_images(self, parent):
         rootHeight = parent.winfo_reqheight()
@@ -205,15 +218,23 @@ class Viewer(ttk.Frame):
         self.vla_img.create_image(0, 0, anchor=tk.NW, image=self.vla_ph_image)
 
     def create_buttons(self, parent):
-        self.progress_bar = ttk.Button(parent,text="Progress")
-        self.save_button = ttk.Button(parent, text="Save")
         self.prev_button = ttk.Button(parent, text="Previous study", command=self.controller.prev_study)
         self.next_button = ttk.Button(parent, text="Next study", command=self.controller.next_study)
+        #Create radiobuttons for scoring
+        self.score_label = tk.Label(parent, text="Would change reorientation:")
+        self.r_buttons_list = []
+        self.score_val = tk.IntVar()
+        for i in range(1,6):
+            self.r_buttons_list.append(ttk.Radiobutton(parent, text=SCORES[i-1],
+                                        variable=self.score_val, value=i, command=self.set_score))
         #Position buttons
-        self.progress_bar.grid(row=0, column=0, sticky="nsew")
-        self.save_button.grid(row=0, column=1,sticky="nsew")
-        self.prev_button.grid(row=0, column=2, sticky="nsew")
-        self.next_button.grid(row=0, column=3, sticky="nsew")
+        self.prev_button.grid(row=0, column=0, sticky="nsew")
+        self.next_button.grid(row=0, column=1, sticky="nsew")
+        self.score_label.grid(row=0, column=2, sticky='nsew')
+        for i in range(5):
+            self.r_buttons_list[i].grid(row=0, column=3+i, sticky='nsew')
+        #Next buton is disabled until scoring
+        self.disable_next_button()
 
     def disable_next_button(self):
         self.next_button.config(state=tk.DISABLED)
@@ -235,15 +256,12 @@ class Viewer(ttk.Frame):
         """
         self.controller = controller
 
-    def save_button_clicked(self):
+    def set_score(self):
         """
-        Handle button click event
+        Handle score radio button interaction
         :return:
         """
-        if self.controller:
-            self.controller.save(self.email_var.get())
-
-def rgb2gray(rgb):
-    r, g, b = rgb[:,:,0], rgb[:,:,1], rgb[:,:,2]
-    gray = -1.0519e-3*r*r+6.85197e-1*r+9.30363675e-4*g*g+3.21731459e-1*g+5.40679459e-4*b*b-9.60007638e-02*b
-    return gray
+        self.enable_next_button()
+        
+    def reset_score(self):
+        self.score_val.set(None)
