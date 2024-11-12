@@ -7,6 +7,7 @@ Created on Mon May 29 10:37:06 2023
 """
 
 import numpy as np
+import scipy
 import shutil
 
 def copy_and_rename(src_path, dest_path, og_name, new_name):

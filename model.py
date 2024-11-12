@@ -5,8 +5,6 @@ from scipy.spatial.transform import Rotation as R
 from scipy.ndimage import map_coordinates
 from pickle import load
 
-APEX_VERSOR_Z_ROT_ANGLE = -10 #Adjustment angle in degrees for rotating BA apex vector with respect to z axis. 
-
 class Model:
     """Encapsulates the logic and operations necessary for loading,
     reorientating and generating slices of a cardiac nifty study in
@@ -44,15 +42,9 @@ class Model:
         mitral_valve = self.m_valve
         apex = self.apex
         rv_center = self.rv
-        #Z rotation matrix
-        angle = (APEX_VERSOR_Z_ROT_ANGLE*np.pi)/180
-        z_rot_mat = np.array([[np.cos(angle),-np.sin(angle),0],
-                              [np.sin(angle),np.cos(angle),0],
-                              [0,0,1]])
         # Compute the vector from mitral valve to apex
         apex_vector = np.array(apex) - np.array(mitral_valve)
-        rotated_apex = np.matmul(z_rot_mat, apex_vector)
-        apex_vector = rotated_apex / np.linalg.norm(rotated_apex)  # Normalize the vector
+        apex_vector = apex_vector / np.linalg.norm(apex_vector)  # Normalize the vector
         
         # Compute the vector from mitral valve to RV center
         rv_vector = np.array(rv_center) - np.array(mitral_valve)
