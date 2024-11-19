@@ -7,8 +7,8 @@ Created on Mon May 29 10:37:06 2023
 """
 
 import numpy as np
-import scipy
 import shutil
+import pandas as pd
 
 def copy_and_rename(src_path, dest_path, og_name, new_name):
     # Copy the file
@@ -84,3 +84,16 @@ def unravel_index(index, shape):
         out.append(index % dim)
         index = index // dim
     return tuple(reversed(out))
+
+def scores_txt2csv(file_path):
+    with open(file_path, 'r') as f:
+        lines = f.readlines()
+    result_dict = {'id':[], 'shx':[], 'vla':[], 'hla':[]}
+    for line in lines:
+        file_id, shx, vla, hla = line.split(',')
+        result_dict['id'].append(file_id)
+        result_dict['shx'].append(shx.split('=')[-1])
+        result_dict['vla'].append(vla.split('=')[-1])
+        result_dict['hla'].append(hla.split('=')[-1])
+    res_df = pd.DataFrame(result_dict)
+    res_df.to_csv(file_path.split('.')[0]+'.csv')
