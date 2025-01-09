@@ -126,6 +126,29 @@ All required dependencies are listed in the "requirements.txt" file, installatio
 ## Usage
 SPECT images must be saved as NIfTI files in a directory on the current repository under the name "Results". This directory must also have a .pkl file for each .nii file, with each .pkl providing the information of the base, apex and right ventricle location. These locations must be saved as a dictionary with the keys "base", "apex" and "rv". Values for each key must be the centroid of the landmark in voxel units and float format.
 
+An example of the contents in the Results dir is shown in the following image,
+
+<a href="https://github.com/EzequielVijande/OrientationGUI/graphs/contributors">
+  <img src="./images/results_example.png" alt="contrib.rocks image" />
+</a>
+
+After running the app the user will be prompted to input a user name.
+
+<a href="https://github.com/EzequielVijande/OrientationGUI/graphs/contributors">
+  <img src="./images/user_login.png" alt="user login menu" />
+</a>
+
+This user name is the same used for naming the .txt file which saves the rotation angles applied to each visualized study.
+
+<a href="https://github.com/EzequielVijande/OrientationGUI/graphs/contributors">
+  <img src="./images/user_results.png" alt="view of directory showing the file named user.txt" />
+</a>
+
+Each row in this .txt has the name of the file first and the rotated angle for each view.
+
+<a href="https://github.com/EzequielVijande/OrientationGUI/graphs/contributors">
+  <img src="./images/user_scores.png" alt="Structure of the contents in the user.txt file" />
+</a>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -168,7 +191,7 @@ Distributed under the GPL-3.0 license. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name -  ezequielvijande@gmail.com
+Ezequiel Vijande -  ezequielvijande@gmail.com
 
 Project Link: [https://github.com/EzequielVijande/OrientationGUI](https://github.com/EzequielVijande/OrientationGUI)
 
