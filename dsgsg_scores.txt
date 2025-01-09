@@ -1,2 +1,0 @@
-1, shx=0, vla=0, hla=0
-10, shx=0, vla=0, hla=0
